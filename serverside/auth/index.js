@@ -1,26 +1,25 @@
 const {Pool} = require('pg')
 const http = require('http');
-var crypto = require('crypto');
+const sha1 = require('sha1');
 
 const database = new Pool({
-  user: 'emptyy',
-  password: 'ynes',
+  user: 'crona_adm',
+  password: 'crona_adm_pass',
   host: '10.4.0.3',
   port: 5432,
   database: 'tth'
 });
 
+// e21fc56c1a272b630e0d1439079d0598cf8b8329
 
 async function validate(user_id, password) {
   return (await database.query(
               `SELECT Password FROM users WHERE Name=${user_id};`))
              .rows[0]
-             .password ===
-      crypto.createHash('md5').update(password).digest('hex');
+             .password === sha1(password);
 }
 
 const server = http.createServer(async (request, response) => {
-  console.log('REQ!')
   console.info(request.url)
   if (!request.url.startsWith('/api/'))
   return responseError(response, 404, 'not an api request');
@@ -33,11 +32,10 @@ const server = http.createServer(async (request, response) => {
           })
       .on('end', () => {
         body = Buffer.concat(body).toString();
-        try {
-          resolve(request, body, response);
-        } catch (exception) {
-          console.error(exception)
-        }
+        console.log(validate(
+            request.headers['user-id'], request.headers['user-password']));
+        // if (validate()) {}
+        // resolve(request, body, response);
       });
 });
 
