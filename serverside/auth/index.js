@@ -7,7 +7,7 @@ const database = new Pool({
   password: 'crona_adm_pass',
   host: '10.4.0.3',
   port: 5432,
-  database: 'tth'
+  database: 'crona_adm'
 });
 
 // e21fc56c1a272b630e0d1439079d0598cf8b8329
