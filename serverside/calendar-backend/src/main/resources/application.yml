@@ -1,0 +1,18 @@
+spring:
+  error:
+    include-message: always
+  application:
+    name: calendar-backend
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode:
+        always
+  datasource:
+    username: crono-user
+    password: crono-pass
+    url: jdbc:postgresql://localhost:5432/crono-database
+    driverClassName: org.postgresql.Driver
