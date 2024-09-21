@@ -14,15 +14,20 @@
 				margin: 0px;
 				padding: 0px;
 				font-family: Gramatika;
-				font-size: 2rem;
+				font-size: 1.5rem;
 				background: #0F1C2E;
 				color: #F1F1F1;
+		/*		min-height: 100vh;
+				max-height: 100vh;
+				min-width: 100vw;
+				max-width: 100vw;*/
 			}
 
 			header.year-month {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
 				justify-content: center;
+				align-items: center;
 			}
 
 			header.days {
@@ -55,7 +60,7 @@
 			day > events {
 				min-height: 4rem;
 			}
-			
+
 			day > span {
 				min-height: 2rem;
 			}
@@ -104,10 +109,18 @@
 			main {
 				display: none;
 				flex-direction: column;
+				/*min-height: 100vh;
+				max-height: 100vh;
+				min-width: 100vw;
+				max-width: 100vw;*/
 			}
 
 			main.visible {
 				display: flex; !important;
+			}
+
+			content.calendar {
+
 			}
 		</style>
 	</head>
@@ -115,21 +128,25 @@
 		<main id="calendar" class="visible">
 			<header class="year-month">
 				<span id="year">2024</span>
-				<div class="divider"></div>
-				<button class="month-button" id="button-prev-month">&lt;</button>
-				<span id="month">Сентябрь</span>
-				<button class="month-button" id="button-next-month">&gt;</button>
+				<!-- <div class="divider"></div> -->
+				<span>
+					<button class="month-button" id="button-prev-month">&lt;</button>
+					<span id="month">Сентябрь</span>
+					<button class="month-button" id="button-next-month">&gt;</button>
+				</span>
 			</header>
-			<header class="days">
-				<span>Пн</span>
-				<span>Вт</span>
-				<span>Ср</span>
-				<span>Чт</span>
-				<span>Пт</span>
-				<span>Сб</span>
-				<span>Вс</span>
-			</header>
-			<content id="days">
+			<content class="calendar">
+				<header class="days">
+					<span>Пн</span>
+					<span>Вт</span>
+					<span>Ср</span>
+					<span>Чт</span>
+					<span>Пт</span>
+					<span>Сб</span>
+					<span>Вс</span>
+				</header>
+				<content id="days">
+				</content>
 			</content>
 		</main>
 		<main id="timetable">
@@ -236,5 +253,23 @@
 			document.getElementById('month').innerText = months_names[month];
 			document.getElementById('year').innerText = calendar.year.toString();
 		}
+
+		document.getElementById('days').addEventListener('swiped-left', function(e) {
+			let calendar = document.getElementById('calendar');
+			let month = (calendar.month == 11) ? 0 : calendar.month + 1;
+			if (month == 0) calendar.year += 1;
+			calendar_render(month, calendar.year);
+			document.getElementById('month').innerText = months_names[month];
+			document.getElementById('year').innerText = calendar.year.toString();
+		});
+
+		document.getElementById('days').addEventListener('swiped-right', function(e) {
+			let calendar = document.getElementById('calendar');
+			let month = (calendar.month == 0) ? 11 : calendar.month - 1;
+			if (month == 11) calendar.year -= 1;
+			calendar_render(month, calendar.year);
+			document.getElementById('month').innerText = months_names[month];
+			document.getElementById('year').innerText = calendar.year.toString();
+		});
 	</script>
 </html>
