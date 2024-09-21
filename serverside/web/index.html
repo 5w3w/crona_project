@@ -21,6 +21,11 @@
 				max-height: 100vh;
 				min-width: 100vw;
 				max-width: 100vw;
+				scrollbar-width: none;
+			}
+
+			html::-webkit-scrollbar, body::-webkit-scrollbar { 
+				display: none;
 			}
 
 			header.year-month {
@@ -51,14 +56,22 @@
 			}
 
 			day {
-				border: 1px solid #F1F1F1;
+				border: 0.5px solid #F1F1F1;
 				text-align: center;
 				display: flex;
 				flex-direction: column;
 			}
 
 			day > events {
-				min-height: 4rem;
+				min-height: calc(4rem + 0.2rem);
+				max-height: calc(4rem + 0.2rem);
+				display: flex;
+				flex-direction: column;
+			}
+
+			event {
+				max-height: 2rem;
+				min-height: 2rem;
 			}
 
 			day > span {
@@ -115,10 +128,14 @@
 				main > content > content {
 					width: 100%;
 				}
+
+				.month-button {
+					display: none;
+				}
 			}
 
 			content#days {
-				border: 1px solid #F1F1F1;
+				border: 0.5px solid #F1F1F1;
 			}
 
 			.month-button {
@@ -148,9 +165,15 @@
 				display: flex;
 				flex-direction: column;
 				overflow-y: scroll;
+				min-width: 100vw;
 				justify-content: initial;
 				border-top: 0.5px solid #F1F1F188;
 				border-bottom: 0.5px solid #F1F1F188;
+				scrollbar-width: none;
+			}
+
+			content#timetable-hours::-webkit-scrollbar { 
+				display: none;
 			}
 
 			hour {
@@ -165,21 +188,29 @@
 
 			hour > span {
 				font-size: 0.9rem;
-				padding-left: 0.5rem;
+				padding-left:  0.5rem;
 				opacity: 1;
 				color: #F1F1F1;
 				font-weight: 100;
 			}
 		</style>
 	</head>
-	<body onload="onLoad()">
+	<body>
 		<main id="calendar" class="visible">
 			<header class="year-month">
 				<span id="year">2024</span>
 				<span>
-					<button class="month-button" id="button-prev-month">&lt;</button>
+					<button class="month-button" id="button-prev-month">
+						<svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0.292893 7.29289C-0.0976311 7.68342 -0.0976311 8.31658 0.292893 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928932C7.68054 0.538408 7.04738 0.538408 6.65685 0.928932L0.292893 7.29289ZM76 7L1 7V9L76 9V7Z" fill="#F1F1F1"/>
+						</svg>
+					</button>
 					<span id="month">Сентябрь</span>
-					<button class="month-button" id="button-next-month">&gt;</button>
+					<button class="month-button" id="button-next-month">
+						<svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M75.7071 8.70711C76.0976 8.31658 76.0976 7.68342 75.7071 7.29289L69.3431 0.928932C68.9526 0.538408 68.3195 0.538408 67.9289 0.928932C67.5384 1.31946 67.5384 1.95262 67.9289 2.34315L73.5858 8L67.9289 13.6569C67.5384 14.0474 67.5384 14.6805 67.9289 15.0711C68.3195 15.4616 68.9526 15.4616 69.3431 15.0711L75.7071 8.70711ZM0 9H75V7H0L0 9Z" fill="#F1F1F1"/>
+						</svg>
+					</button>
 				</span>
 			</header>
 			<content class="calendar-container">
@@ -219,6 +250,18 @@
 		function return_calendar() {
 			document.getElementById("timetable").classList.remove("visible");
 			document.getElementById("calendar").classList.add("visible");
+		}
+
+		function add_event(day, event) {
+			// event: { start, end, name }
+			let events = document.getElementById(`day-${day.year}-${day.month}-${day.day}`).children[1];
+			if (events.children.length < 2) {
+				let event_el = document.createElement('event');
+				events.appendChild(event_el);
+				event_el.innerText = event.name;
+			} else {
+
+			}
 		}
 
 		function day_click(day) {
@@ -290,6 +333,7 @@
 				let day = document.createElement("day");
 				day.onclick = () => { day_click(day) };
 				day.date = it;
+				day.id = `day-${it.getFullYear()}-${it.getMonth()}-${it.getDate()}`;
 				let day_span = document.createElement("span");
 				let day_events = document.createElement("events");
 				day_span.innerText = it.getDate();
@@ -304,6 +348,8 @@
 		}
 
 		calendar_render((new Date()).getMonth(), (new Date()).getFullYear());
+
+		add_event({'year': 2024, 'month': 8, 'day': 11}, {'start': null, 'end': null, 'name': "Игра в гольф"});
 
 		let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
 
@@ -360,18 +406,5 @@
 		document.addEventListener('touchend', e => {
 			checkDirection();
 		})
-	</script>
-	<script type="text/javascript">
-		function onLoad() {
-			document.addEventListener("deviceready", onDeviceReady, false);
-		}
-
-		function onDeviceReady() {
-			document.addEventListener("backbutton", onBackKeyDown, false);
-		}
-
-		function onBackKeyDown() {
-			return_calendar();
-		}
 	</script>
 </html>
