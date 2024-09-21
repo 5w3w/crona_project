@@ -13,6 +13,7 @@ const database = new Pool({
 // e21fc56c1a272b630e0d1439079d0598cf8b8329
 
 async function validate(user_id, password) {
+  console.info(sha1(password))
   return (await database.query(
               `SELECT Password FROM users WHERE Name='${user_id}';`))
              .rows[0]
@@ -32,6 +33,7 @@ const server = http.createServer(async (request, response) => {
           })
       .on('end', () => {
         body = Buffer.concat(body).toString();
+        console.info(request.headers['user-password'])
         console.log(validate(
             request.headers['user-id'], request.headers['user-password']));
         // if (validate()) {}
