@@ -37,8 +37,8 @@ services:
     ports:
       - "5000:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
-      PGADMIN_DEFAULT_PASSWORD: strong-password
+      PGADMIN_DEFAULT_EMAIL: crona_pg_log
+      PGADMIN_DEFAULT_PASSWORD: crona_pg_pass
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
