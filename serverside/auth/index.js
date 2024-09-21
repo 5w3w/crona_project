@@ -46,6 +46,12 @@ const server = http.createServer(async (request, response) => {
   if ((!request.headers['user-id']) && (!request.headers['user-password']))
     return responseCode(response, 418, 'meow');
   if (request.url.startsWith('/api/reg')) {
+    if (userExists(request.headers['user-id']))
+      return responseCode(response, 418, 'user exists');
+    console.info(
+        await database.query(`insert into users (name,password) values ('${
+            request.headers['user-id']}','${
+            request.headers['user-password']}}');`));
     return responseCode(response, 200, '')
   }
   let body = [];
