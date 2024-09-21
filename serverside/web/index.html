@@ -63,7 +63,7 @@
 /*				-webkit-text-stroke-color: black;*/
 			}
 
-			day.inactive {
+			day.inactive > * {
 				opacity: 0.33;
 			}
 
@@ -83,6 +83,10 @@
 				}
 			}
 
+			content#days {
+				border: 1px solid #F1F1F1;
+			}
+
 			.month-button {
 				border: none;
 				outline: none;
@@ -92,10 +96,19 @@
 				-webkit-text-stroke-width: 2px;
 				-webkit-text-stroke-color: black;
 			}
+
+			main {
+				display: none;
+				flex-direction: column;
+			}
+
+			main.visible {
+				display: flex; !important;
+			}
 		</style>
 	</head>
 	<body>
-		<main id="calendar">
+		<main id="calendar" class="visible">
 			<header class="year-month">
 				<span id="year">2024</span>
 				<div class="divider"></div>
@@ -116,7 +129,7 @@
 			</content>
 		</main>
 		<main id="timetable">
-			
+			<span></span>
 		</main>
 	</body>
 	<script>
@@ -128,8 +141,10 @@
 	*/
 	</script>
 	<script type="text/javascript">
-		function day_click(event) {
-			console.log(event)
+		function day_click(day) {
+			console.log(day.date.getDate());
+			document.getElementById("timetable").classList.add("visible");
+			document.getElementById("calendar").classList.remove("visible");
 		}
 	</script>
 	<script type="text/javascript">
@@ -181,7 +196,8 @@
 			days_element.innerHTML = "";
 			calendar_days.forEach((it) => {
 				let day = document.createElement("day");
-				day.onclick = day_click;
+				day.onclick = () => day_click(day);
+				day.date = it;
 				let day_span = document.createElement("span");
 				let day_events = document.createElement("events");
 				day_span.innerText = it.getDate();
