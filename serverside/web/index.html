@@ -278,6 +278,33 @@
 			return hashHex;
 		}
 
+		class EventAPI {
+			constructor(username, password) {
+				this.name = username
+				this.hash = digestMessage(password)
+			}
+
+			async #request(method, endpoint, body) {
+				if (body)
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						},
+						body: body
+					})
+				else
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						}
+					})
+			}
+		}
+
 		function add_event(day, event) {
 			// event: { start, end, name }
 			let events = document.getElementById(`day-${day.year}-${day.month}-${day.day}`).children[1];
