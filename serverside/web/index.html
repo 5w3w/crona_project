@@ -172,7 +172,7 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body onload="onLoad()">
 		<main id="calendar" class="visible">
 			<header class="year-month">
 				<span id="year">2024</span>
@@ -360,5 +360,18 @@
 		document.addEventListener('touchend', e => {
 			checkDirection();
 		})
+	</script>
+	<script type="text/javascript">
+		function onLoad() {
+			document.addEventListener("deviceready", onDeviceReady, false);
+		}
+
+		function onDeviceReady() {
+			document.addEventListener("backbutton", onBackKeyDown, false);
+		}
+
+		function onBackKeyDown() {
+			return_calendar();
+		}
 	</script>
 </html>
