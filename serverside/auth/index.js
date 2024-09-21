@@ -10,20 +10,42 @@ const database = new Pool({
   database: 'crona_adm'
 });
 
+// 94aec9fbed989ece189a7e172c9cf41669050495152bc4c1dbf2a38d7fd85627
 // e21fc56c1a272b630e0d1439079d0598cf8b8329
 
 async function validate(user_id, password) {
-  console.info(sha1(password))
+  if (!userExists(user_id)) return false;
   return (await database.query(
-              `SELECT Password FROM users WHERE Name='${user_id}';`))
+              `SELECT password FROM users WHERE name='${user_id}';`))
              .rows[0]
              .password === sha1(password);
+}
+
+async function userExists(user_id) {
+  return (await database.query(
+              `SELECT password FROM users WHERE name='${user_id}';`))
+             .rows.length !== 0;
+}
+
+async function register(user_id, password) {
+  if (userExists(user_id)) return false;
+  await database.query(`INSERT INTO users (name, password) VALUES ('${
+      user_id}', '${password}');`);
+  return true;
+}
+
+function responseError(response, code, error) {
+  response.writeHead(code);
+  response.write(error.toString());
+  response.end();
 }
 
 const server = http.createServer(async (request, response) => {
   console.info(request.url)
   if (!request.url.startsWith('/api/'))
   return responseError(response, 404, 'not an api request');
+  if ((!request.headers['user-id']) && (!request.headers['user-password']))
+    return responseError(response, 418, 'meow');
 
   let body = [];
   request
@@ -33,7 +55,6 @@ const server = http.createServer(async (request, response) => {
           })
       .on('end', () => {
         body = Buffer.concat(body).toString();
-        console.info(request.headers['user-password'])
         console.log(validate(
             request.headers['user-id'], request.headers['user-password']));
         // if (validate()) {}
@@ -41,4 +62,4 @@ const server = http.createServer(async (request, response) => {
       });
 });
 
-server.listen({host: '0.0.0.0', port: 1004});
+server.listen({host: '0.0.0.0', port: 5000});
