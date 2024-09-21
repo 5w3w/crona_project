@@ -143,13 +143,37 @@
 			content.calendar {
 
 			}
+
+			content#timetable-hours {
+				display: flex;
+				flex-direction: column;
+				overflow-y: scroll;
+				justify-content: initial;
+				border-top: 1px solid #F1F1F1AA;
+				border-bottom: 1px solid #F1F1F1AA;
+			}
+
+			hour {
+				min-height: 4rem;
+				max-height: 4rem;
+				min-width: 100%;
+				border-top: 1px solid #F1F1F1AA;
+				border-bottom: 1px solid #F1F1F1AA;
+				display: flex;
+				flex-direction: row;
+			}
+
+			hour > span {
+				font-size: 0.9rem;
+				padding-left: 0.5rem;
+				opacity: 0.67;
+			}
 		</style>
 	</head>
 	<body>
 		<main id="calendar" class="visible">
 			<header class="year-month">
 				<span id="year">2024</span>
-				<!-- <div class="divider"></div> -->
 				<span>
 					<button class="month-button" id="button-prev-month">&lt;</button>
 					<span id="month">Сентябрь</span>
@@ -173,7 +197,12 @@
 			</content>
 		</main>
 		<main id="timetable">
-			<span></span>
+			<header class="year-month" onclick="return_calendar()">
+				<span id="selected-month"></span>
+				<span id="selected-day"></span>
+			</header>
+			<content id="timetable-hours">
+			</content>
 		</main>
 	</body>
 	<script>
@@ -185,10 +214,27 @@
 	*/
 	</script>
 	<script type="text/javascript">
+		function return_calendar() {
+			document.getElementById("timetable").classList.remove("visible");
+			document.getElementById("calendar").classList.add("visible");
+		}
+
 		function day_click(day) {
-			console.log(day.date.getDate());
+			let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
+			console.log(day.date);
 			document.getElementById("timetable").classList.add("visible");
 			document.getElementById("calendar").classList.remove("visible");
+			document.getElementById("selected-day").innerText = day.date.getDate().toString();
+			document.getElementById("selected-month").innerText = months_names[day.date.getMonth()];
+		}
+
+		let timetable = document.getElementById('timetable-hours');
+		for (let i = 0; i < 24; i++) {
+			let hour = document.createElement('hour');
+			let hour_span = document.createElement('span');
+			hour_span.innerText = `${('0' + i).slice(-2)}:00`;
+			hour.appendChild(hour_span);
+			timetable.appendChild(hour);
 		}
 	</script>
 	<script type="text/javascript">
@@ -240,7 +286,7 @@
 			days_element.innerHTML = "";
 			calendar_days.forEach((it) => {
 				let day = document.createElement("day");
-				day.onclick = () => day_click(day);
+				day.onclick = () => { day_click(day) };
 				day.date = it;
 				let day_span = document.createElement("span");
 				let day_events = document.createElement("events");
@@ -281,6 +327,7 @@
 		let touchendX = 0;
 
 		function checkDirection() {
+			console.log(touchstartX, touchendX)
 			if ((touchendX - touchstartX) / window.screen.width < -0.35) {
 				let calendar = document.getElementById('calendar');
 				let month = (calendar.month == 11) ? 0 : calendar.month + 1;
@@ -301,6 +348,7 @@
 
 		document.addEventListener('touchstart', e => {
 			touchstartX = e.changedTouches[0].screenX;
+			touchendX = e.changedTouches[0].screenX;
 		})
 
 		document.addEventListener('touchmove', e => {
