@@ -1,2 +1,0 @@
-# crona_project
-
