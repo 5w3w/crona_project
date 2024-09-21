@@ -30,21 +30,40 @@ services:
     networks:
       back:
         ipv4_address: 10.4.0.3
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
+  auth:
+    image: node
     restart: always
-    ports:
-      - "5000:80"
+    user: node
+    working_dir: /home/node/app
+    depends_on:
+      db:
+        condition: service_started
     environment:
-      PGADMIN_DEFAULT_EMAIL: crona_adm_log
-      PGADMIN_DEFAULT_PASSWORD: crona_adm_pass
+      - NODE_ENV=production
+    ports:
+      - 5000:1004
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - ./auth:/home/node/app
+    command: "node index.js"
     networks:
+      default:
       back:
-        ipv4_address: 10.4.0.2
-      default: 
+        ipv4_address: 10.4.0.1
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgadmin4_container
+  #   restart: always
+  #   ports:
+  #     - "5000:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: crona_adm_log
+  #     PGADMIN_DEFAULT_PASSWORD: crona_adm_pass
+  #   volumes:
+  #     - pgadmin-data:/var/lib/pgadmin
+  #   networks:
+  #     back:
+  #       ipv4_address: 10.4.0.2
+  #     default: 
 
 volumes:
   local_pgdata:
