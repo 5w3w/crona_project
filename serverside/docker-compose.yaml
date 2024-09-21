@@ -41,7 +41,7 @@ services:
     environment:
       - NODE_ENV=production
     ports:
-      - 5000:1004
+      - 7680:1004
     volumes:
       - ./auth:/home/node/app
     command: "node index.js"
