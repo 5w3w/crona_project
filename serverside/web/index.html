@@ -254,22 +254,36 @@
 			document.getElementById('year').innerText = calendar.year.toString();
 		}
 
-		document.getElementById('days').addEventListener('swiped-left', function(e) {
-			let calendar = document.getElementById('calendar');
-			let month = (calendar.month == 11) ? 0 : calendar.month + 1;
-			if (month == 0) calendar.year += 1;
-			calendar_render(month, calendar.year);
-			document.getElementById('month').innerText = months_names[month];
-			document.getElementById('year').innerText = calendar.year.toString();
-		});
+		let touchstartX = 0;
+		let touchendX = 0;
 
-		document.getElementById('days').addEventListener('swiped-right', function(e) {
-			let calendar = document.getElementById('calendar');
-			let month = (calendar.month == 0) ? 11 : calendar.month - 1;
-			if (month == 11) calendar.year -= 1;
-			calendar_render(month, calendar.year);
-			document.getElementById('month').innerText = months_names[month];
-			document.getElementById('year').innerText = calendar.year.toString();
-		});
+		function checkDirection() {
+			if (touchendX < touchstartX) {
+				let calendar = document.getElementById('calendar');
+				let month = (calendar.month == 11) ? 0 : calendar.month + 1;
+				if (month == 0) calendar.year += 1;
+				calendar_render(month, calendar.year);
+				document.getElementById('month').innerText = months_names[month];
+				document.getElementById('year').innerText = calendar.year.toString();
+			}
+			if (touchendX > touchstartX) {
+				let calendar = document.getElementById('calendar');
+				let month = (calendar.month == 0) ? 11 : calendar.month - 1;
+				if (month == 11) calendar.year -= 1;
+				calendar_render(month, calendar.year);
+				document.getElementById('month').innerText = months_names[month];
+				document.getElementById('year').innerText = calendar.year.toString();
+			}
+		}
+
+		document.addEventListener('touchstart', e => {
+			touchstartX = e.changedTouches[0].screenX;
+			checkDirection();
+		})
+
+		document.addEventListener('touchend', e => {
+			touchendX = e.changedTouches[0].screenX;
+			checkDirection();
+		})
 	</script>
 </html>
