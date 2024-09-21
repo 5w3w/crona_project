@@ -11,10 +11,12 @@ const database = new Pool({
 });
 
 // 94aec9fbed989ece189a7e172c9cf41669050495152bc4c1dbf2a38d7fd85627
-// e21fc56c1a272b630e0d1439079d0598cf8b8329
+// 3196d7cdef3ec0f106d51354d82763dd47f8eb4b
 
 async function validate(user_id, password) {
+  console.info(userExists(user_id))
   if (!userExists(user_id)) return false;
+  console.info(sha1(password))
   return (await database.query(
               `SELECT password FROM users WHERE name='${user_id}';`))
              .rows[0]
