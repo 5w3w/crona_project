@@ -28,7 +28,7 @@ services:
       - local_pgdata:/var/lib/postgresql/data
     networks:
       back:
-        ipv4_adress: 10.4.0.3
+        ipv4_address: 10.4.0.3
           
   pgadmin:
     image: dpage/pgadmin4
@@ -43,7 +43,7 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     networks:
       back:
-        ipv4_adress: 10.4.0.2
+        ipv4_address: 10.4.0.2
       default: 
 
 volumes:
