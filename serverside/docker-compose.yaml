@@ -26,6 +26,10 @@ services:
       POSTGRES_PASSWORD: crona_adm_pass
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+    networks:
+      back:
+        ipv4_adress: 10.4.0.3
+          
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -37,7 +41,19 @@ services:
       PGADMIN_DEFAULT_PASSWORD: strong-password
     volumes:
       - pgadmin-data:/var/lib/pgadmin
+    networks:
+      back:
+        ipv4_adress: 10.4.0.2
+      default: 
 
 volumes:
   local_pgdata:
   pgadmin-data:
+
+networks:
+  back:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.4.0.0/16
