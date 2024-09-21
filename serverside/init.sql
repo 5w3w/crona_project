@@ -3,6 +3,7 @@
 CREATE TABLE Users (
     ID SERIAL PRIMARY KEY,
     Name VARCHAR(255) NOT NULL,
+    Email VARCHAR(255),
     Password VARCHAR(255) NOT NULL
 );
 
