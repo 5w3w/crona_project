@@ -33,12 +33,14 @@
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				font-size: 2rem;
 			}
 
 			header.days {
 				display: flex;
 				flex-direction: row;
 				justify-content: center;
+				font-size: 2rem;
 			}
 
 			header.days > span {
@@ -56,24 +58,46 @@
 			}
 
 			day {
-				border: 0.5px solid #F1F1F1;
+				border: 0.5px solid #F1F1F199;
 				text-align: center;
 				display: flex;
 				flex-direction: column;
 			}
 
 			day > events {
-				min-height: calc(4rem + 0.2rem);
-				max-height: calc(4rem + 0.2rem);
+				text-align: left;
+				min-height: calc(4rem + 0.4rem * 2 + 0.6rem);
+				max-height: calc(4rem + 0.4rem * 2 + 0.6rem);
 				display: flex;
+				justify-content: center;
+				align-items: center;
 				flex-direction: column;
 			}
 
 			event {
+				background: white;
+				color: black;
+				padding-left: 0.3rem;
+				padding-right: 0.3rem;
+				border-radius: 0.4rem;
+				margin-left: 0.4rem;
+				margin-right: 0.4rem;
+				margin-bottom: 0.4rem;
 				max-height: 2rem;
 				min-height: 2rem;
+				min-width: 80%;
+				max-width: 80%;
 				line-height: 1rem;
 				font-size: 0.67rem;
+			}
+
+			event-more {
+				min-height: 0.2rem;
+				max-height: 0.2rem;
+				min-width: 60%;
+				max-width: 60%;
+				background: white;
+				border-radius: 0.4rem;
 			}
 
 			day > span {
@@ -92,7 +116,7 @@
 			}
 
 			day.today {
-				background: #912D26;
+				background: #F1F1F173;
 			}
 
 			@media (orientation: landscape) {
@@ -114,13 +138,14 @@
 				}
 
 				main > header {
-					min-height: 5rem;
-					max-height: 5rem;
+					min-height: 8rem;
+					max-height: 8rem;
+					font-size: 1.5rem;
 				}
 
 				main > content {
-					min-height: calc(100vh - 5rem);
-					max-height: calc(100vh - 5rem);
+					min-height: calc(100vh - 8rem);
+					max-height: calc(100vh - 8rem);
 					display: flex;
 					flex-direction: row;
 					justify-content: center;
@@ -190,24 +215,29 @@
 
 			hour > span {
 				font-size: 0.9rem;
-				padding-left:  0.5rem;
+				padding-left: 0.5rem;
 				opacity: 1;
 				color: #F1F1F1;
 				font-weight: 100;
+			}
+
+			.logo {
+				min-height: 4vh;
+				margin: 2rem;
 			}
 		</style>
 	</head>
 	<body>
 		<main id="calendar" class="visible">
 			<header class="year-month">
-				<span id="year">2024</span>
-				<span>
+				<img class="logo" src="download.svg">
+				<span style="line-height: 2rem;">
 					<button class="month-button" id="button-prev-month">
 						<svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M0.292893 7.29289C-0.0976311 7.68342 -0.0976311 8.31658 0.292893 8.70711L6.65685 15.0711C7.04738 15.4616 7.68054 15.4616 8.07107 15.0711C8.46159 14.6805 8.46159 14.0474 8.07107 13.6569L2.41421 8L8.07107 2.34315C8.46159 1.95262 8.46159 1.31946 8.07107 0.928932C7.68054 0.538408 7.04738 0.538408 6.65685 0.928932L0.292893 7.29289ZM76 7L1 7V9L76 9V7Z" fill="#F1F1F1"/>
 						</svg>
 					</button>
-					<span id="month">Сентябрь</span>
+					<span id="year-month-span">Сентябрь, 2024</span>
 					<button class="month-button" id="button-next-month">
 						<svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M75.7071 8.70711C76.0976 8.31658 76.0976 7.68342 75.7071 7.29289L69.3431 0.928932C68.9526 0.538408 68.3195 0.538408 67.9289 0.928932C67.5384 1.31946 67.5384 1.95262 67.9289 2.34315L73.5858 8L67.9289 13.6569C67.5384 14.0474 67.5384 14.6805 67.9289 15.0711C68.3195 15.4616 68.9526 15.4616 69.3431 15.0711L75.7071 8.70711ZM0 9H75V7H0L0 9Z" fill="#F1F1F1"/>
@@ -240,18 +270,45 @@
 			</content>
 		</main>
 	</body>
-	<script>
-	/*
-	#912D26 - сегодня
-	#0F1C2E - фон
-	#FFE7D3 - события
-	#F1F1F1 - разделение
-	*/
-	</script>
 	<script type="text/javascript">
 		function return_calendar() {
 			document.getElementById("timetable").classList.remove("visible");
 			document.getElementById("calendar").classList.add("visible");
+		}
+
+		async function digestMessage(message) {
+			const msgUint8 = new TextEncoder().encode(message);
+			const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+			const hashArray = Array.from(new Uint8Array(hashBuffer));
+			const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+			return hashHex;
+		}
+
+		class EventAPI {
+			constructor(username, password) {
+				this.name = username
+				this.hash = digestMessage(password)
+			}
+
+			async request(method, endpoint, body) {
+				if (body)
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						},
+						body: body
+					})
+				else
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						}
+					})
+			}
 		}
 
 		function add_event(day, event) {
@@ -262,7 +319,8 @@
 				events.appendChild(event_el);
 				event_el.innerText = event.name;
 			} else {
-
+				let more_events = document.createElement('event-more');
+				events.appendChild(more_events);
 			}
 		}
 
@@ -285,6 +343,8 @@
 		}
 	</script>
 	<script type="text/javascript">
+		let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
+
 		function getDaysInMonth(month, year) {
 			var date = new Date(year, month, 1);
 			var days = [];
@@ -347,21 +407,21 @@
 			})
 			calendar.year = year;
 			calendar.month = month;
+			let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
+			document.getElementById('year-month-span').innerText = `${months_names[calendar.month]}, ${calendar.year}`;
 		}
 
 		calendar_render((new Date()).getMonth(), (new Date()).getFullYear());
 
 		add_event({'year': 2024, 'month': 8, 'day': 11}, {'start': null, 'end': null, 'name': "Игра в гольф"});
-
-		let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
+		add_event({'year': 2024, 'month': 8, 'day': 11}, {'start': null, 'end': null, 'name': "Защита проекта"});
+		add_event({'year': 2024, 'month': 8, 'day': 11}, {'start': null, 'end': null, 'name': "Мистер Пенис"});
 
 		document.getElementById('button-prev-month').onclick = (event) => {
 			let calendar = document.getElementById('calendar');
 			let month = (calendar.month == 0) ? 11 : calendar.month - 1;
 			if (month == 11) calendar.year -= 1;
 			calendar_render(month, calendar.year);
-			document.getElementById('month').innerText = months_names[month];
-			document.getElementById('year').innerText = calendar.year.toString();
 		}
 
 		document.getElementById('button-next-month').onclick = (event) => {
@@ -369,8 +429,6 @@
 			let month = (calendar.month == 11) ? 0 : calendar.month + 1;
 			if (month == 0) calendar.year += 1;
 			calendar_render(month, calendar.year);
-			document.getElementById('month').innerText = months_names[month];
-			document.getElementById('year').innerText = calendar.year.toString();
 		}
 
 		let touchstartX = 0;
@@ -383,16 +441,12 @@
 				let month = (calendar.month == 11) ? 0 : calendar.month + 1;
 				if (month == 0) calendar.year += 1;
 				calendar_render(month, calendar.year);
-				document.getElementById('month').innerText = months_names[month];
-				document.getElementById('year').innerText = calendar.year.toString();
 			}
 			if ((touchendX - touchstartX) / window.screen.width > 0.35) {
 				let calendar = document.getElementById('calendar');
 				let month = (calendar.month == 0) ? 11 : calendar.month - 1;
 				if (month == 11) calendar.year -= 1;
 				calendar_render(month, calendar.year);
-				document.getElementById('month').innerText = months_names[month];
-				document.getElementById('year').innerText = calendar.year.toString();
 			}
 		}
 

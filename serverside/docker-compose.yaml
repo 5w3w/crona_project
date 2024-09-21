@@ -30,7 +30,25 @@ services:
     networks:
       back:
         ipv4_address: 10.4.0.3
-          
+  auth:
+    image: node
+    restart: always
+    user: node
+    working_dir: /home/node/app
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 5000:1004
+    volumes:
+      - ./auth:/home/node/app
+    command: "node index.js"
+    networks:
+      default:
+      back:
+        ipv4_address: 10.4.0.4
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
