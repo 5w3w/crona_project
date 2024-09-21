@@ -284,7 +284,7 @@
 				this.hash = digestMessage(password)
 			}
 
-			async #request(method, endpoint, body) {
+			async request(method, endpoint, body) {
 				if (body)
 					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
 						method: method,
