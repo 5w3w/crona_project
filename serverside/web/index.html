@@ -5,71 +5,216 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Календарб</title>
 		<style type="text/css">
-			:root {
-				--fc-small-font-size: .85em;
-				--fc-page-bg-color: #0F1C2E;
-				--fc-neutral-bg-color: #0F1C2E;
-				--fc-neutral-text-color: #F1F1F1;
-				--fc-border-color: #F1F1F1;
-
-				--fc-button-text-color: #F1F1F1;
-				--fc-button-bg-color: #0F1C2E;
-				--fc-button-border-color: #2C3E50;
-				--fc-button-hover-bg-color: #0F1C2E;
-				--fc-button-hover-border-color: #1a252f;
-				--fc-button-active-bg-color: #0F1C2E;
-				--fc-button-active-border-color: #151e27;
-
-				--fc-event-bg-color: #0F1C2E;
-				--fc-event-border-color: #3788d8;
-				--fc-event-text-color: #F1F1F1;
-				--fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
-
-				--fc-more-link-bg-color: #0F1C2E;
-				--fc-more-link-text-color: #F1F1F1;
-
-				--fc-event-resizer-thickness: 8px;
-				--fc-event-resizer-dot-total-width: 8px;
-				--fc-event-resizer-dot-border-width: 1px;
-
-				--fc-non-business-color: rgba(215, 215, 215, 0.3);
-				--fc-bg-event-color: #0F1C2E;
-				--fc-bg-event-opacity: 0.3;
-				--fc-highlight-color: rgba(188, 232, 241, 0.3);
-				--fc-today-bg-color: #912D26AA;
-				--fc-now-indicator-color: red;
+			@font-face {
+				font-family: 'Gramatika';
+				src: url('Gramatika-Regular.woff2');
 			}
 
 			html, body {
 				margin: 0px;
 				padding: 0px;
-			}
-
-			main#calendar {
+				font-family: Gramatika;
+				font-size: 2rem;
 				background: #0F1C2E;
 				color: #F1F1F1;
+			}
+
+			header.year-month {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+			}
+
+			header.days {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+			}
+
+			header.days > span {
+				flex: 1;
+				text-align: center;
+			}
+
+			div.divider {
+				min-width: 1rem;
+			}
+
+			content#days {
+				display: grid;
+				grid-template-columns: repeat(7, 1fr);
+			}
+
+			day {
+				border: 1px solid #F1F1F1;
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+			}
+
+			day > events, day > span {
+			 	min-height: 2rem;
+			}
+
+			day > span {
+			 	text-align: left;
+				padding-left: 1rem;
+/*				-webkit-text-stroke-width: 2px;*/
+/*				-webkit-text-stroke-color: black;*/
+			}
+
+			day.inactive {
+				opacity: 0.33;
+			}
+
+			day.today {
+				background: #912D26;
+			}
+
+			@media (orientation: landscape) {
+				main#calendar {
+					margin: 0px 15vw;
+				}
+			}
+
+			@media (orientation: portrait) {
+				html, body {
+					font-size: 1.5rem;
+				}
+			}
+
+			.month-button {
+				border: none;
+				outline: none;
+				background: #0000;
+				font-size: 2rem;
+				color: #F1F1F1;
+				-webkit-text-stroke-width: 2px;
+				-webkit-text-stroke-color: black;
 			}
 		</style>
 	</head>
 	<body>
-		<!-- <header><span id="month">Сентябрь</span></header> -->
-		<main id="calendar"></main>
+		<main id="calendar">
+			<header class="year-month">
+				<span id="year">2024</span>
+				<div class="divider"></div>
+				<button class="month-button" id="button-prev-month">&lt;</button>
+				<span id="month">Сентябрь</span>
+				<button class="month-button" id="button-next-month">&gt;</button>
+			</header>
+			<header class="days">
+				<span>Пн</span>
+				<span>Вт</span>
+				<span>Ср</span>
+				<span>Чт</span>
+				<span>Пт</span>
+				<span>Сб</span>
+				<span>Вс</span>
+			</header>
+			<content id="days">
+			</content>
+		</main>
+		<main id="timetable">
+			
+		</main>
 	</body>
-	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'ru'
-        });
-        calendar.render();
-      });
-	  /*
-	  #912D26 - сегодня
-	  #0F1C2E - фон
-	  #FFE7D3 - события
-	  #F1F1F1 - разделение
-	  */
-    </script>
+	<script>
+	/*
+	#912D26 - сегодня
+	#0F1C2E - фон
+	#FFE7D3 - события
+	#F1F1F1 - разделение
+	*/
+	</script>
+	<script type="text/javascript">
+		function day_click(event) {
+			console.log(event)
+		}
+	</script>
+	<script type="text/javascript">
+		function getDaysInMonth(month, year) {
+			var date = new Date(year, month, 1);
+			var days = [];
+			while (date.getMonth() === month) {
+				days.push(new Date(date));
+				date.setDate(date.getDate() + 1);
+			}
+			return days;
+		}
+
+		function isToday(date) {
+			return (new Date()).toDateString() === date.toDateString()
+		}
+ 
+		function calendar_render(month, year, events) {
+			let calendar = document.getElementById('calendar');
+			let calendar_days = [];
+			let this_month = getDaysInMonth(month, year);
+			if (this_month[0].getDay() != 1) {
+				let p_year = year - (month == 0 ? 1 : 0);
+				let p_month = (month == 0) ? 11 : (month - 1);
+				let past_month = getDaysInMonth(p_month, p_year);
+				let first_day_index = 0;
+				for (let i = 0; i < past_month.length; i++)
+					if (past_month[i].getDay() == 1) first_day_index = i;
+				for (let i = first_day_index; i < past_month.length; i++)
+					calendar_days.push(past_month[i]);
+			}
+			for (let i = 0; i < this_month.length; i++)
+				calendar_days.push(this_month[i]);
+			if (this_month[this_month.length - 1].getDay() != 0) {
+				let p_year = year + (month == 11 ? 1 : 0);
+				let p_month = (month == 11) ? 0 : (month + 1);
+				let next_month = getDaysInMonth(p_month, p_year);
+				let first_day_index = 0;
+				for (let i = 0; i < next_month.length; i++) {
+					if (next_month[i].getDay() == 0) {
+						first_day_index = i;
+						break;
+					}
+				}
+				for (let i = 0; i <= first_day_index; i++)
+					calendar_days.push(next_month[i]);
+			}
+			let days_element = document.getElementById("days");
+			days_element.innerHTML = "";
+			calendar_days.forEach((it) => {
+				let day = document.createElement("day");
+				day.onclick = day_click;
+				let day_span = document.createElement("span");
+				let day_events = document.createElement("events");
+				day_span.innerText = it.getDate();
+				day.appendChild(day_span);
+				day.appendChild(day_events);
+				if (isToday(it)) day.classList.add("today");
+				if (it.getMonth() != month) day.classList.add("inactive");
+				days_element.appendChild(day);
+			})
+			calendar.year = year;
+			calendar.month = month;
+		}
+
+		calendar_render((new Date()).getMonth(), (new Date()).getFullYear());
+
+		let months_names = "Январь Февраль Март Апрель Май Июнь Июль Август Сентябрь Октябрь Ноябрь Декабрь".split(' ');
+
+		document.getElementById('button-prev-month').onclick = (event) => {
+			let calendar = document.getElementById('calendar');
+			let month = (calendar.month == 0) ? 11 : calendar.month - 1;
+			if (month == 11) calendar.year -= 1;
+			calendar_render(month, calendar.year);
+			document.getElementById('month').innerText = months_names[month];
+			document.getElementById('year').innerText = calendar.year.toString();
+		}
+
+		document.getElementById('button-next-month').onclick = (event) => {
+			let calendar = document.getElementById('calendar');
+			let month = (calendar.month == 11) ? 0 : calendar.month + 1;
+			if (month == 0) calendar.year += 1;
+			calendar_render(month, calendar.year);
+			document.getElementById('month').innerText = months_names[month];
+			document.getElementById('year').innerText = calendar.year.toString();
+		}
+	</script>
 </html>
