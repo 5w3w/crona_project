@@ -26,6 +26,7 @@ services:
       POSTGRES_PASSWORD: crona_adm_pass
     volumes:
       - local_pgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/./init.sql
     networks:
       back:
         ipv4_address: 10.4.0.3
@@ -37,8 +38,8 @@ services:
     ports:
       - "5000:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: crona_pg_log
-      PGADMIN_DEFAULT_PASSWORD: crona_pg_pass
+      PGADMIN_DEFAULT_EMAIL: crona_adm_log
+      PGADMIN_DEFAULT_PASSWORD: crona_adm_pass
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     networks:
