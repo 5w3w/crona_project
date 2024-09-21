@@ -10,9 +10,6 @@ const database = new Pool({
   database: 'crona_adm'
 });
 
-// 94aec9fbed989ece189a7e172c9cf41669050495152bc4c1dbf2a38d7fd85627
-// 3196d7cdef3ec0f106d51354d82763dd47f8eb4b
-
 async function validate(user_id, password) {
   console.info(await userExists(user_id))
   if (!(await userExists(user_id))) return false;
@@ -36,7 +33,7 @@ async function register(user_id, password) {
   return true;
 }
 
-function responseError(response, code, error) {
+function responseCode(response, code, error) {
   response.writeHead(code);
   response.write(error.toString());
   response.end();
@@ -45,10 +42,12 @@ function responseError(response, code, error) {
 const server = http.createServer(async (request, response) => {
   console.info(request.url)
   if (!request.url.startsWith('/api/'))
-  return responseError(response, 404, 'not an api request');
+  return responseCode(response, 404, 'not an api request');
   if ((!request.headers['user-id']) && (!request.headers['user-password']))
-    return responseError(response, 418, 'meow');
-
+    return responseCode(response, 418, 'meow');
+  if (request.url.startsWith('/api/reg')) {
+    return responseCode(response, 200, '')
+  }
   let body = [];
   request
       .on('data',
@@ -59,6 +58,7 @@ const server = http.createServer(async (request, response) => {
         body = Buffer.concat(body).toString();
         validate(request.headers['user-id'], request.headers['user-password'])
             .then(x => console.info(x));
+
         // if (validate()) {}
         // resolve(request, body, response);
       });
