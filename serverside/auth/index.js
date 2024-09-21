@@ -55,8 +55,8 @@ const server = http.createServer(async (request, response) => {
           })
       .on('end', () => {
         body = Buffer.concat(body).toString();
-        console.log(validate(
-            request.headers['user-id'], request.headers['user-password']));
+        validate(request.headers['user-id'], request.headers['user-password'])
+            .then(x => console.info(x));
         // if (validate()) {}
         // resolve(request, body, response);
       });
