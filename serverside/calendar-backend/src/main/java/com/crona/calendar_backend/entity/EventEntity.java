@@ -2,6 +2,7 @@ package com.crona.calendar_backend.entity;
 
 import com.crona.calendar_backend.dto.CreateEventDTO;
 import com.crona.calendar_backend.dto.EditEventDTO;
+import com.crona.calendar_backend.dto.EventDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -67,5 +68,10 @@ public class EventEntity {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public EventDTO toDTO() {
+        return new EventDTO(this.id, this.name, this.organizator.getId(), this.location,
+                this.maxCapacity, this.currCap, TIMESTAMP_FORMAT.format(this.timeFrom), TIMESTAMP_FORMAT.format(this.timeTo));
     }
 }

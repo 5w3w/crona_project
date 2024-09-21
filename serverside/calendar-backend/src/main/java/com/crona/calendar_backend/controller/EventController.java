@@ -1,9 +1,6 @@
 package com.crona.calendar_backend.controller;
 
-import com.crona.calendar_backend.dto.CreateEventDTO;
-import com.crona.calendar_backend.dto.DeleteDTO;
-import com.crona.calendar_backend.dto.EditEventDTO;
-import com.crona.calendar_backend.dto.EventByUserAndDateInDTO;
+import com.crona.calendar_backend.dto.*;
 import com.crona.calendar_backend.entity.EventEntity;
 import com.crona.calendar_backend.service.EventService;
 import jakarta.validation.Valid;
@@ -25,7 +22,7 @@ public class EventController {
     }
 
     @GetMapping("/getSpecificEvents")
-    public List<EventEntity> getEventByUserIdAndDate(@RequestBody EventByUserAndDateInDTO inDTO) {
+    public List<EventDTO> getEventByUserIdAndDate(@RequestBody EventByUserAndDateInDTO inDTO) {
         return eventService.getEventByUserIdAndDate(inDTO.getUserId(), inDTO.getMonth(), inDTO.getYear());
     }
 
@@ -36,7 +33,7 @@ public class EventController {
     }
 
     @PutMapping("/{eventId}")
-    public EventEntity editEvent(@RequestBody @Valid EditEventDTO editEventDTO, @PathVariable Integer eventId) {
+    public EventDTO editEvent(@RequestBody @Valid EditEventDTO editEventDTO, @PathVariable Integer eventId) {
         return eventService.editEvent(eventId, editEventDTO);
     }
 

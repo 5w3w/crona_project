@@ -2,6 +2,7 @@ package com.crona.calendar_backend.service;
 
 import com.crona.calendar_backend.dto.CreateEventDTO;
 import com.crona.calendar_backend.dto.EditEventDTO;
+import com.crona.calendar_backend.dto.EventDTO;
 import com.crona.calendar_backend.entity.EventEntity;
 import com.crona.calendar_backend.entity.User;
 import com.crona.calendar_backend.exception.BadRequestException;
@@ -27,8 +28,8 @@ public class EventService {
         this.visitRepository = visitRepository;
     }
 
-    public List<EventEntity> getEventByUserIdAndDate(Integer userId, int month, int year) {
-        return eventRepository.findEventsByUserIdAndDate(userId, year, month);
+    public List<EventDTO> getEventByUserIdAndDate(Integer userId, int month, int year) {
+        return eventRepository.findEventsByUserIdAndDate(userId, year, month).stream().map(e -> e.toDTO()).toList();
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class EventService {
     }
 
     @Transactional
-    public EventEntity editEvent(Integer id, EditEventDTO editEventDTO) {
+    public EventDTO editEvent(Integer id, EditEventDTO editEventDTO) {
         Optional<EventEntity> eventOpt = eventRepository.findById(id);
         if (eventOpt.isEmpty())
             throw new BadRequestException("Event с таким id не существует в базе данных");
@@ -70,6 +71,6 @@ public class EventService {
             throw new BadRequestException("Пользователь не является организатором данного event");
 
         event.edit(editEventDTO, userOpt.get());
-        return eventRepository.save(event);
+        return eventRepository.save(event).toDTO();
     }
 }
