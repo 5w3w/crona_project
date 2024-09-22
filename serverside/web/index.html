@@ -313,6 +313,15 @@
 		document.getElementById("create-event-button").onclick = () => {
 			let name = document.getElementById("event-name").value;
 			if (name.trim() === "") return;
+			api.request("POST", "event", JSON.stringify({
+				"userId" : api.id,
+				"name" : api.name,
+				"location" : "location",
+				"maxCapacity" : 2,
+				"currCap" : 0,
+				"timeFrom" : `${Gyear}.${('0' + Gmonth).slice(-2)}.${('0' + Gday).slice(-2)}T${document.getElementById('event-time').value}:00`,
+				"timeTo" : `${Gyear}.${('0' + Gmonth).slice(-2)}.${('0' + Gday).slice(-2)}T${document.getElementById('event-time').value}:00`
+			}))
 
 		}
 		document.getElementById("overlay-main").onclick = (e) => {
