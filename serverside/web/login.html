@@ -196,7 +196,7 @@
 			const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 			return hashHex;
 		}
-		
+
 		class EventAPI {
 			constructor(username, password) {
 				this.name = username
@@ -258,7 +258,9 @@
 			localStorage.password = digestMessage(password);
 			let api = EventAPI(localStorage.username, localStorage.password);
 			let rp = await api.request("POST", "auth");
-			window.location = "https://calendar.hnpse.ru/";
+			if (rp.status === 200)
+				window.location = "https://calendar.hnpse.ru/";
+			else alert('ИДИ НАХУЙ');
 		}
 	</script>
 </html>
