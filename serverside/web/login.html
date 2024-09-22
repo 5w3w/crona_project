@@ -105,11 +105,18 @@
 				display: flex;
 			}
 
+			img {
+				filter: brightness(0.0);
+				max-width: 32vw;
+				margin-left: calc((50vw - 32vw) / 2);
+				margin-top: 4vw;
+			}
+
 			@media (orientation: portrait) {
 				content.background {
 					min-width: 100vw;
 				}
-				
+
 				content.ui {
 					min-width: 100vw;
 					left: 0px;
@@ -139,13 +146,19 @@
 					font-size: 0.6rem;
 					padding: 0.7rem;
 				}
+
+				img {
+					max-width: 65vw;
+					margin-left: calc((100vw - 65vw) / 2);
+					margin-top: 7.5vh;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<main>
 			<content class="background">
-				<img class="logo" src="download.svg" style="filter: brightness(0.0); max-width: 32vw; margin-left: calc((50vw - 32vw) / 2); margin-top: 4vw;">
+				<img class="logo" src="download.svg">
 				<content class="ui">
 					<content class="row-container">
 						<content class="column-container">
