@@ -41,7 +41,7 @@ services:
     environment:
       - NODE_ENV=production
     ports:
-      - 5000:1004
+      - 5001:1004
     volumes:
       - ./auth:/home/node/app
     command: "node index.js"
@@ -49,6 +49,20 @@ services:
       default:
       back:
         ipv4_address: 10.4.0.4
+  spring-backend:
+    image: openjdk:21-jdk
+    container_name: calendar-backend
+    restart: always
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./target/calendar-backend-0.0.1-SNAPSHOT.jar:/app/calendar-backend.jar
+    command: "java -jar /app/calendar-backend-0.0.1.jar"
+    depends_on:
+      - db
+    networks:
+      back:
+        ipv4_address: 10.4.0.5
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
