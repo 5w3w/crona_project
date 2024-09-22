@@ -30,7 +30,39 @@ services:
     networks:
       back:
         ipv4_address: 10.4.0.3
-          
+  auth:
+    image: node
+    restart: always
+    user: node
+    working_dir: /home/node/app
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 5001:1004
+    volumes:
+      - ./auth:/home/node/app
+    command: "node index.js"
+    networks:
+      default:
+      back:
+        ipv4_address: 10.4.0.4
+  spring-backend:
+    image: openjdk:21-jdk
+    container_name: calendar-backend
+    restart: always
+    ports:
+      - "5555:5555"
+    volumes:
+      - ./calendar-backend/target/calendar-backend-0.0.1-SNAPSHOT.jar:/app/calendar-backend.jar
+    command: "java -jar /app/calendar-backend-0.0.1.jar"
+    depends_on:
+      - db
+    networks:
+      back:
+        ipv4_address: 10.4.0.5
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4_container
@@ -38,7 +70,7 @@ services:
     ports:
       - "5000:80"
     environment:
-      PGADMIN_DEFAULT_EMAIL: crona_adm_log
+      PGADMIN_DEFAULT_EMAIL: crona_adm_log@adm.go
       PGADMIN_DEFAULT_PASSWORD: crona_adm_pass
     volumes:
       - pgadmin-data:/var/lib/pgadmin
@@ -58,3 +90,4 @@ networks:
       driver: default
       config:
         - subnet: 10.4.0.0/16
+
