@@ -51,7 +51,7 @@ const server = http.createServer(async (request, response) => {
     console.info(request.headers['user-password'])
         await database.query(`insert into users (name,password) values ('${
             request.headers['user-id']}','${
-            request.headers['user-password']}}');`);
+            request.headers['user-password']}');`);
     return responseCode(response, 200, '')
   }
   if (request.url.startsWith('/api/auth')) {
