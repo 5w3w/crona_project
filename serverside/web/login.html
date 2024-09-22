@@ -190,7 +190,7 @@
 
 			async request(method, endpoint, body) {
 				if (body)
-					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+					return await fetch(`https://krona-calendar.ru/api/${endpoint}`, {
 						method: method,
 						headers: {
 							"user-id": this.name,
@@ -199,7 +199,7 @@
 						body: body
 					})
 				else
-					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+					return await fetch(`https://krona-calendar.ru/api/${endpoint}`, {
 						method: method,
 						headers: {
 							"user-id": this.name,
@@ -241,7 +241,7 @@
 			let api = new EventAPI(localStorage.username, localStorage.password);
 			let rp = await api.request("POST", "auth");
 			if (rp.status === 200)
-				window.location = "https://calendar.hnpse.ru/";
+				window.location = "https://krona-calendar.ru/";
 			else alert('Неправильный логин или пароль!');
 		}
 
@@ -250,7 +250,7 @@
 				let api = new EventAPI(localStorage.username, localStorage.password);
 				let rp = await api.request("POST", "auth");
 				if (rp.status === 200)
-					window.location = "https://calendar.hnpse.ru/";
+					window.location = "https://krona-calendar.ru/";
 			}
 		})()
 		
