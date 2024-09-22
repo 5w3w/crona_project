@@ -200,7 +200,7 @@
 		class EventAPI {
 			constructor(username, password) {
 				this.name = username
-				this.hash = digestMessage(password)
+				this.hash = password
 			}
 
 			async request(method, endpoint, body) {
