@@ -67,9 +67,16 @@ const server = http.createServer(async (request, response) => {
       .on('end', () => {
         body = Buffer.concat(body).toString();
         validate(request.headers['user-id'], request.headers['user-password'])
-            .then(x => console.info(x));
-        // if (validate()) {}
-        // resolve(request, body, response);
+            .then(async (ok) => {
+              if (ok) {
+                let rq = await fetch(
+                    `http://localhost:5555${request.url}`,
+                    {method: request.method, body: body})
+                responseCode(response, rq.status, await rq.text())
+              } else {
+                responseCode(response, 418, 'wrong auth data')
+              }
+            });
       });
 });
 

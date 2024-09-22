@@ -303,7 +303,7 @@
 			}
 		}
 
-		var api = EventAPI(localStorage.username, localStorage.password)
+		var api = new EventAPI(localStorage.username, localStorage.password)
 
 		function add_event(day, event) {
 			// event: { start, end, name }
