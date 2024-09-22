@@ -13,6 +13,7 @@ const database = new Pool({
 async function validate(user_id, password) {
   console.info(await userExists(user_id))
   if (!(await userExists(user_id))) return false;
+  console.info(password)
   console.info(sha1(password))
   console.info((await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows[0].password)
   return (await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows[0].password === sha1(password);
