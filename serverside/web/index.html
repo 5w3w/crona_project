@@ -326,8 +326,13 @@
 
 		class EventAPI {
 			constructor(username, password) {
-				this.name = username
-				this.hash = password
+				this.name = username;
+				this.hash = password;
+				this.setup();
+			}
+
+			async setup() {
+				this.id = parseInt(await (await this.request("GET", "auth")).text());
 			}
 
 			async request(method, endpoint, body) {

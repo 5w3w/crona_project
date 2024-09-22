@@ -39,18 +39,13 @@ const server = http.createServer(async (request, response) => {
   if (request.url.startsWith('/api/reg')) {
     if (await userExists(request.headers['user-id']))
       return responseCode(response, 418, 'user exists');
-        await database.query(`insert into users (name,password) values ('${request.headers['user-id']}','${sha1(request.headers['user-password'])}');`);
+    await database.query(`insert into users (name,password) values ('${request.headers['user-id']}','${sha1(request.headers['user-password'])}');`);
     return responseCode(response, 200, '')
-  }
-  if (request.url.startsWith('/api/get-id')) {
-    if (await userExists(request.headers['user-id']))
-      return responseCode(response, 200, (await database.query(`SELECT id from users where name = '${request.headers['user-id']}';`)).rows[0].id);
-    return responseCode(response, 418, 'memememeow')
   }
   if (request.url.startsWith('/api/auth')) {
     if (await validate(request.headers['user-id'], request.headers['user-password']))
       return responseCode(response, 200, (await database.query(`SELECT id from users where name = '${request.headers['user-id']}';`)).rows[0].id);
-      return responseCode(response, 418, '')
+    return responseCode(response, 418, '')
   }
   let body = [];
   request
