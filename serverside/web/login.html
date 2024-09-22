@@ -189,6 +189,14 @@
 		<!-- </main> -->
 	</body>
 	<script type="text/javascript">
+		let digestMessage = async (message) => {
+			const msgUint8 = new TextEncoder().encode(message);
+			const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+			const hashArray = Array.from(new Uint8Array(hashBuffer));
+			const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+			return hashHex;
+		}
+
 		class EventAPI {
 			constructor(username, password) {
 				this.name = username
@@ -216,6 +224,10 @@
 			}
 		}
 
+		async function register(username, password) {
+			return await (new EventAPI(username, await digestMessage(password))).request("post", "reg");
+		}
+
 		function toggle() {
 			let input_toggle = document.getElementById('eye')
 			let password_input = document.getElementById('password')
@@ -237,13 +249,6 @@
 		}
 
 		document.getElementById('login-button').onclick = async () => {
-			let digestMessage = async (message) => {
-				const msgUint8 = new TextEncoder().encode(message);
-				const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-				const hashArray = Array.from(new Uint8Array(hashBuffer));
-				const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-				return hashHex;
-			}
 			let username = document.getElementById('login').value;
 			let password = document.getElementById('password').value;
 			localStorage.username = username;
