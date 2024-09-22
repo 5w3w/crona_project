@@ -11,7 +11,10 @@ const database = new Pool({
 });
 
 async function validate(user_id, password) {
+  console.info(await userExists(user_id))
   if (!(await userExists(user_id))) return false;
+  console.info(sha1(password))
+  console.info((await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows[0].password)
   return (await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows[0].password === sha1(password);
 }
 
@@ -32,6 +35,7 @@ function responseCode(response, code, error) {
 }
 
 const server = http.createServer(async (request, response) => {
+  console.info(request.url)
   if (!request.url.startsWith('/api/'))
   return responseCode(response, 404, 'not an api request');
   if ((!request.headers['user-id']) && (!request.headers['user-password']))
@@ -39,6 +43,7 @@ const server = http.createServer(async (request, response) => {
   if (request.url.startsWith('/api/reg')) {
     if (await userExists(request.headers['user-id']))
       return responseCode(response, 418, 'user exists');
+    console.info(request.headers['user-password'])
         await database.query(`insert into users (name,password) values ('${request.headers['user-id']}','${sha1(request.headers['user-password'])}');`);
     return responseCode(response, 200, '')
   }
