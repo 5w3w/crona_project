@@ -49,7 +49,7 @@ const server = http.createServer(async (request, response) => {
   }
   if (request.url.startsWith('/api/auth')) {
     if (await validate(request.headers['user-id'], request.headers['user-password']))
-      return responseCode(response, 200, (await database.query(`SELECT id from users where name = '${request.headers['user-id']}';`)).rows[0].id)
+      return responseCode(response, 200, (await database.query(`SELECT id from users where name = '${request.headers['user-id']}';`)).rows[0].id);
       return responseCode(response, 418, '')
   }
   let body = [];
