@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Календарб</title>
+		<title>Krona Kalendar</title>
 		<style type="text/css">
 			@font-face {
 				font-family: 'Gramatika';
@@ -107,8 +107,6 @@
 			day > span {
 			 	text-align: left;
 				padding-left: 1rem;
-/*				-webkit-text-stroke-width: 2px;*/
-/*				-webkit-text-stroke-color: black;*/
 			}
 
 			day.inactive > * {
@@ -225,6 +223,40 @@
 				min-height: 4vh;
 				margin: 2rem;
 			}
+
+			overlay {
+/*				display: none;*/
+				backdrop-filter: blur(1vmin) brightness(0.5);
+				min-width: 100vw;
+				min-height: 100vh;
+				position: absolute;
+				z-index: 10;
+				top: 0px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			overlay > content {
+				display: flex;
+				background: #0F1C2E;
+				min-height: 50vh;
+				min-width: 50vw;
+				border-radius: 2vmin;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			overlay > content > * {
+				min-width: 25vw;
+				max-width: 25vw;
+				background: #0F1C2E;
+				margin: 1rem;
+				border: 2px solid #F1F1F1;
+				border-radius: 5px;
+				font-size: 1rem;
+				color: white;
+			}
 		</style>
 	</head>
 	<body>
@@ -269,8 +301,25 @@
 			<content id="timetable-hours">
 			</content>
 		</main>
+		<overlay id="overlay-main">
+			<content id="create-event">
+				<input type="text" placeholder="Название события" id="event-name">
+				<input type="text" disabled id="event-time">
+				<button style="background: #FFE7D3; color: black;" id="create-event-button">Создать</button>
+			</content>
+		</overlay>
 	</body>
 	<script type="text/javascript">
+		var Gyear, Gmonth, Gday;
+		document.getElementById("create-event-button").onclick = () => {
+			let name = document.getElementById("event-name").value;
+			if (name.trim() === "") return;
+
+		}
+		document.getElementById("overlay-main").onclick = (e) => {
+			if (e.target == document.getElementById("overlay-main")) document.getElementById('overlay-main').style.display = 'none'
+		}
+
 		function return_calendar() {
 			document.getElementById("timetable").classList.remove("visible");
 			document.getElementById("calendar").classList.add("visible");
@@ -306,7 +355,6 @@
 		var api = new EventAPI(localStorage.username, localStorage.password)
 
 		function add_event(day, event) {
-			// event: { start, end, name }
 			let events = document.getElementById(`day-${day.year}-${day.month}-${day.day}`).children[1];
 			if (events.children.length < 2) {
 				let event_el = document.createElement('event');
@@ -325,11 +373,18 @@
 			document.getElementById("calendar").classList.remove("visible");
 			document.getElementById("selected-day").innerText = day.date.getDate().toString();
 			document.getElementById("selected-month").innerText = months_names[day.date.getMonth()];
+			Gyear = day.date.getFullYear();
+			Gmonth = day.date.getMonth();
+			Gday = day.date.getDate();
 		}
 
 		let timetable = document.getElementById('timetable-hours');
 		for (let i = 0; i < 24; i++) {
 			let hour = document.createElement('hour');
+			hour.onclick = () => {
+				document.getElementById("event-time").value = `${('0' + i).slice(-2)}:00`
+				document.getElementById("overlay-main").style.display = 'flex'
+			}
 			let hour_span = document.createElement('span');
 			hour_span.innerText = `${('0' + i).slice(-2)}:00`;
 			hour.appendChild(hour_span);
