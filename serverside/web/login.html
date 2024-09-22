@@ -263,11 +263,14 @@
 			else alert('Неправильный логин или пароль!');
 		}
 
-		if (localStorage.username && localStorage.password) {
-			let api = new EventAPI(localStorage.username, localStorage.password);
-			let rp = await api.request("POST", "auth");
-			if (rp.status === 200)
-				window.location = "https://calendar.hnpse.ru/";
-		}
+		(async () => {
+			if (localStorage.username && localStorage.password) {
+				let api = new EventAPI(localStorage.username, localStorage.password);
+				let rp = await api.request("POST", "auth");
+				if (rp.status === 200)
+					window.location = "https://calendar.hnpse.ru/";
+			}
+		})()
+		
 	</script>
 </html>
