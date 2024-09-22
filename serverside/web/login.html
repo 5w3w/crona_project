@@ -189,6 +189,33 @@
 		<!-- </main> -->
 	</body>
 	<script type="text/javascript">
+		class EventAPI {
+			constructor(username, password) {
+				this.name = username
+				this.hash = digestMessage(password)
+			}
+
+			async request(method, endpoint, body) {
+				if (body)
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						},
+						body: body
+					})
+				else
+					return await fetch(`https://calendar.hnpse.ru/api/${endpoint}`, {
+						method: method,
+						headers: {
+							"user-id": this.name,
+							"user-password": this.hash
+						}
+					})
+			}
+		}
+
 		function toggle() {
 			let input_toggle = document.getElementById('eye')
 			let password_input = document.getElementById('password')
@@ -222,6 +249,8 @@
 			if ()
 			localStorage.username = username;
 			localStorage.password = digestMessage(password);
+			let api = EventAPI(localStorage.username, localStorage.password);
+			let rp = await api.request("POST", "auth");
 			window.location = "https://calendar.hnpse.ru/";
 		}
 	</script>
