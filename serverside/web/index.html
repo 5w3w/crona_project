@@ -366,6 +366,7 @@
 		}
 
 		var api = new EventAPI(localStorage.username, localStorage.password)
+		api.setup()
 
 		function add_event(day, event) {
 			let events = document.getElementById(`day-${day.year}-${day.month}-${day.day}`).children[1];
