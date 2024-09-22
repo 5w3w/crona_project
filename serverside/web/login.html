@@ -21,90 +21,154 @@
 
 			body {
 				display: flex;
+				flex-direction: row;
 				min-height: 100vh;
 				max-height: 100vh;
 				min-width: 100vw;
 				max-width: 100vw;
 			}
 
-			main {
-				margin: auto;
+			body > * {
+				flex: 1;
+			}
+
+			input {
+				margin: 0px;
+				background: #0F1C2E;
+				outline: none;
+				border: 1px solid #f1f1f1;
+				border-radius: 5px;
+				margin-bottom: 1.5rem;
+				padding: 0.5rem;
+				color: #F1F1F1;
+				font-size: 1rem;
+				min-height: 1rem;
+				max-height: 1rem;
+				min-width: 15vw;
+				max-width: 15vw;
+			}
+
+			button.login-button {
+				min-height: 2rem;
+				max-height: 2rem;
+				max-width: 7.5vw;
+				left: 0px;
+				justify-self: left;
+				outline: none;
+				border: 1px solid #FFE7D3;
+				border-radius: 5px;
+				transition: 1s background, 0.67s color;
+				background: #FFE7D3;
+				font-size: 1rem;
+				color: black;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				padding-left: 0.5rem;
+			}
+
+			content.background {
+				background: url(ierarhiya_texture.png);
+				background-size: cover;
+				\min-height: 100vh;
+				min-width: 50vw;
 				display: flex;
 				flex-direction: column;
 			}
 
-			content {
-				margin: 0.5rem;
-				padding-left: 0.67rem;
-				padding-right: 0.67rem;
-				border: 1px solid #FFE7D3;
-				min-height: calc(2.5rem + 2px);
-				max-height: calc(2.5rem + 2px);
+			content.ui {
+				position: absolute;
+				left: 50vw;
+				background: #0F1C2E;
+				min-height: 100vh;
+				min-width: 50vw;
+				display: flex;
+				flex-direction: column;
+				align-content: center;
+				justify-content: center;
+			}
+
+			content.row-container {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+			}
+
+			content.column-container {
+				display: flex;
+				flex-direction: column;
+				max-width: 25vw;
+			}
+
+			main {
+				background: #ffe7d3;
 				display: flex;
 			}
 
-			content > input {
-				margin: 0px;
-				background: #0F1C2E;
-				outline: none;
-				border: none;
-				color: #F1F1F1;
-				font-size: 2rem;
-				min-height: 2.5rem;
-				max-height: 2.5rem;
-			}
+			@media (orientation: portrait) {
+				content.ui {
+					min-width: 100vw;
+					left: 0px;
+					min-height: 35vh;
+					max-height: 35vh;
+					top: 30vh;
+				}
 
-			button.show-password-button {
-				outline: none;
-				border: none;
-				background: none;
-				filter: invert(100%);
-			}
+				content.column-container {
+					max-width: 80vw;
+				}
 
-			button.login-button {
-				min-height: calc(2.5rem + 2px);
-				max-height: calc(2.5rem + 2px);
-				outline: none;
-				border: 1px solid #FFE7D3;
-				margin: 0.5rem;
-				transition: 1s background, 0.67s color;
-				background: #0F1C2E;
-				font-size: 2rem;
-				color: #F1F1F1;
-				font-weight: 600;
-				-webkit-text-stroke-width: 0.07rem;
-				-webkit-text-stroke-color: #0F1C2E;
-			}
+				input {
+					min-width: 55vw;
+					max-width: 55vw;
+					font-size: 0.6rem;
+					min-height: 0.6rem;
+					max-height: 0.6rem;
+					margin-bottom: 0.6rem;
+				}
 
-			button.login-button:hover {
-				background: #F1F1F1;
-				color: #0F1C2E;
-			}
-
-			#eye {
-				min-width: 1rem;
-				max-width: 1rem;
-				min-height: 1rem;
-				max-height: 1rem;
+				button.login-button {
+					max-width: 30vw;
+					min-height: 0.6rem;
+					max-height: 0.6rem;
+					font-size: 0.6rem;
+					padding: 0.7rem;
+				}
 			}
 		</style>
 	</head>
 	<body>
-		<main id="login">
-			<content>
-				<input type="text" id="login">
+		<main>
+			<content class="background">
+				<img class="logo" src="download.svg" style="filter: brightness(0.0); max-width: 32vw; margin-left: calc((50vw - 32vw) / 2); margin-top: 4vw;">
+				<content class="ui">
+					<content class="row-container">
+						<content class="column-container">
+							<input placeholder="логин" type="text" id="login">
+							<input placeholder="пароль" type="password" id="password">
+							<button class="login-button" id="login-button"><span style="margin-right: 0.5rem;">войти</span><svg width="76" height="16" viewBox="0 0 76 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M75.7071 8.70711C76.0976 8.31658 76.0976 7.68342 75.7071 7.29289L69.3431 0.928932C68.9526 0.538408 68.3195 0.538408 67.9289 0.928932C67.5384 1.31946 67.5384 1.95262 67.9289 2.34315L73.5858 8L67.9289 13.6569C67.5384 14.0474 67.5384 14.6805 67.9289 15.0711C68.3195 15.4616 68.9526 15.4616 69.3431 15.0711L75.7071 8.70711ZM0 9H75V7H0L0 9Z" fill="#000"/>
+							</svg></button>
+						</content>
+					</content>
+				</content>
 			</content>
-			<content>
-				<input type="password" id="password">
+		</main>
+		<!-- <main id="login"> -->
+			<!-- <content>
+				
+			</content> -->
+			<!-- <content>
+				
 				<button onclick="toggle()" class="show-password-button">
 					 <svg id="eye" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
 						<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 					</svg>
 				</button>
-			</content>
-			<button class="login-button">login</button>
-		</main>
+			</content> -->
+			<!--  -->
+		<!-- </main> -->
 	</body>
 	<script type="text/javascript">
 		function toggle() {
@@ -125,6 +189,20 @@
 				<path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
 				</svg>`
 			}
+		}
+
+		document.getElementById('login-button').onclick = () => {
+			let digestMessage = async (message) => {
+				const msgUint8 = new TextEncoder().encode(message);
+				const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+				const hashArray = Array.from(new Uint8Array(hashBuffer));
+				const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+				return hashHex;
+			}
+			let username = document.getElementById('username').value;
+			let password = document.getElementById('password').value;
+			localStorage.username = username;
+			localStorage.password = digestMessage(password);
 		}
 	</script>
 </html>
