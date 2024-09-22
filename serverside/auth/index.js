@@ -52,6 +52,12 @@ const server = http.createServer(async (request, response) => {
         request.headers['user-id']}','${request.headers['user-password']}}');`);
     return responseCode(response, 200, '')
   }
+  if (request.url.startsWith('/api/auth')) {
+    if (await validate(
+            request.headers['user-id'], request.headers['user-password']))
+      return responseCode(response, 200, '')
+      return responseCode(response, 418, '')
+  }
   let body = [];
   request
       .on('data',
