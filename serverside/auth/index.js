@@ -14,22 +14,16 @@ async function validate(user_id, password) {
   console.info(await userExists(user_id))
   if (!(await userExists(user_id))) return false;
   console.info(sha1(password))
-  return (await database.query(
-              `SELECT password FROM users WHERE name='${user_id}';`))
-             .rows[0]
-             .password === sha1(password);
+  return (await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows[0].password === sha1(password);
 }
 
 async function userExists(user_id) {
-  return (await database.query(
-              `SELECT password FROM users WHERE name='${user_id}';`))
-             .rows.length !== 0;
+  return (await database.query(`SELECT password FROM users WHERE name='${user_id}';`)).rows.length !== 0;
 }
 
 async function register(user_id, password) {
   if (userExists(user_id)) return false;
-  await database.query(`INSERT INTO users (name, password) VALUES ('${
-      user_id}', '${password}');`);
+  await database.query(`INSERT INTO users (name, password) VALUES ('${user_id}', '${password}');`);
   return true;
 }
 
@@ -49,14 +43,11 @@ const server = http.createServer(async (request, response) => {
     if (await userExists(request.headers['user-id']))
       return responseCode(response, 418, 'user exists');
     console.info(request.headers['user-password'])
-        await database.query(`insert into users (name,password) values ('${
-            request.headers['user-id']}','${
-            request.headers['user-password']}');`);
+        await database.query(`insert into users (name,password) values ('${request.headers['user-id']}','${request.headers['user-password']}');`);
     return responseCode(response, 200, '')
   }
   if (request.url.startsWith('/api/auth')) {
-    if (await validate(
-            request.headers['user-id'], request.headers['user-password']))
+    if (await validate(request.headers['user-id'], request.headers['user-password']))
       return responseCode(response, 200, '')
       return responseCode(response, 418, '')
   }
